@@ -3,7 +3,10 @@
         <title>Flappy Bird</title>
     </head>
     <body>
+        <script src="js/pixi.js"></script>
         <script>
+            var app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
+            document.body.appendChild(app.view);
         </script>
     </body>
 </html>
