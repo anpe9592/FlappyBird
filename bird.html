@@ -5,8 +5,31 @@
     <body>
         <script src="js/pixi.js"></script>
         <script>
-            var app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
+            const app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
             document.body.appendChild(app.view);
+
+            const objScale = 1.2;
+
+            const ground = PIXI.Sprite.fromImage('assets/world/land.png');
+            ground.width = 336 * objScale;
+            ground.height = 112 * objScale;
+            ground.x = 0;
+            ground.y = app.renderer.height - ground.height;
+            app.stage.addChild(ground);
+
+            const sky = PIXI.Sprite.fromImage('assets/world/sky.png');
+            sky.width = 276 * objScale;
+            sky.height = 109 * objScale;
+            sky.x = 0;
+            sky.y = app.renderer.height - ground.height - sky.height;
+            app.stage.addChild(sky);
+            console.log("city:", sky.height);
+            
+            /*
+            var bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
+            bird.scale.set(objScale, objScale);
+            app.stage.addChild(bird);
+            */
         </script>
     </body>
 </html>
