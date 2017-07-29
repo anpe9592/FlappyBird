@@ -11,25 +11,64 @@
             const objScale = 1.2;
 
             const ground = PIXI.Sprite.fromImage('assets/world/land.png');
+            const ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
             ground.width = 336 * objScale;
+            ground2.width = 336 * objScale;
             ground.height = 112 * objScale;
-            ground.x = 0;
+            ground2.height = 112 * objScale;
             ground.y = app.renderer.height - ground.height;
-            app.stage.addChild(ground);
+            ground2.y = app.renderer.height - ground.height;
+            app.stage.addChild(ground, ground2);
 
             const sky = PIXI.Sprite.fromImage('assets/world/sky.png');
+            const sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
             sky.width = 276 * objScale;
+            sky2.width = 276 * objScale;
             sky.height = 109 * objScale;
-            sky.x = 0;
+            sky2.height = 109 * objScale;
             sky.y = app.renderer.height - ground.height - sky.height;
-            app.stage.addChild(sky);
-            console.log("city:", sky.height);
+            sky2.y = app.renderer.height - ground.height - sky2.height;
+            app.stage.addChild(sky, sky2);
             
             /*
             var bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
             bird.scale.set(objScale, objScale);
             app.stage.addChild(bird);
             */
+            let postition = 0;
+
+            app.ticker.add(function() {
+                postition += 1;
+
+                sky.x = -(postition * 0.6);
+                sky.x %= sky.width * 2;
+                if (sky.x < 0) {
+                    sky.x += sky.width * 2;
+                }
+                sky.x -= sky.width;
+                
+                sky2.x = -(postition * 0.6) + sky2.width;
+                sky2.x %= sky2.width * 2;
+                if(sky2.x < 0) {
+                    sky2.x += sky2.width * 2;
+                }
+                sky2.x -= sky2.width;
+
+                ground.x = -(postition * 0.6);
+                ground.x %= ground.width * 2;
+                if (ground.x < 0) {
+                    ground.x += ground.width * 2;
+                }
+                ground.x -= ground.width;
+                
+                ground2.x = -(postition * 0.6) + ground2.width;
+                ground2.x %= ground2.width * 2;
+                if(ground2.x < 0) {
+                    ground2.x += ground2.width * 2;
+                }
+                ground2.x -= ground2.width;
+            });
         </script>
     </body>
 </html>
+
