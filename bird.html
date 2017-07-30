@@ -30,11 +30,14 @@
             sky2.y = app.renderer.height - ground.height - sky2.height;
             app.stage.addChild(sky, sky2);
             
-            /*
             var bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
-            bird.scale.set(objScale, objScale);
+            bird.anchor.set(0.5);
+            bird.width = 34 * objScale;
+            bird.height = 24 * objScale;
+            bird.x = app.renderer.width / 2;
+            bird.y = app.renderer.height / 2;
             app.stage.addChild(bird);
-            */
+            
             let postition = 0;
 
             app.ticker.add(function() {
