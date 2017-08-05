@@ -3,39 +3,66 @@
         <title>Flappy Bird</title>
     </head>
     <body>
-        <script src="js/pixi.js"></script>
+        <script src="js/pixi.js" type="text/javascript"></script>
+        <script src="js/matter.js" type="text/javascript"></script>
         <script>
             const app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
             document.body.appendChild(app.view);
 
-            const objScale = 1.2;
+            app.stop();
 
-            const ground = PIXI.Sprite.fromImage('assets/world/land.png');
-            const ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
-            ground.width = 336 * objScale;
-            ground2.width = 336 * objScale;
-            ground.height = 112 * objScale;
-            ground2.height = 112 * objScale;
-            ground.y = app.renderer.height - ground.height;
-            ground2.y = app.renderer.height - ground.height;
-            app.stage.addChild(ground, ground2);
+            PIXI.loader
+                .add('bird')
+                .load(onAssetsLoaded);
 
-            const sky = PIXI.Sprite.fromImage('assets/world/sky.png');
-            const sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
-            sky.width = 276 * objScale;
-            sky2.width = 276 * objScale;
-            sky.height = 109 * objScale;
-            sky2.height = 109 * objScale;
-            sky.y = app.renderer.height - ground.height - sky.height;
-            sky2.y = app.renderer.height - ground.height - sky2.height;
-            app.stage.addChild(sky, sky2);
+            let postition = 0,
+                ground,
+                ground2,
+                sky,
+                sky2,
+                bird;
+
+            app.stage.interactive = true;
+
+            function onAssetsLoaded(loader) {
+                const objScale = 1.2;
+
+                ground = PIXI.Sprite.fromImage('assets/world/land.png');
+                ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
+                ground.width = 336 * objScale;
+                ground2.width = 336 * objScale;
+                ground.height = 112 * objScale;
+                ground2.height = 112 * objScale;
+                ground.y = app.renderer.height - ground.height;
+                ground2.y = app.renderer.height - ground.height;
+                app.stage.addChild(ground, ground2);
+
+                sky = PIXI.Sprite.fromImage('assets/world/sky.png');
+                sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
+                sky.width = 276 * objScale;
+                sky2.width = 276 * objScale;
+                sky.height = 109 * objScale;
+                sky2.height = 109 * objScale;
+                sky.y = app.renderer.height - ground.height - sky.height;
+                sky2.y = app.renderer.height - ground.height - sky2.height;
+                app.stage.addChild(sky, sky2);
             
-            /*
-            var bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
-            bird.scale.set(objScale, objScale);
-            app.stage.addChild(bird);
-            */
-            let postition = 0;
+                bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
+                bird.anchor.set(0.5);
+                bird.width = 34 * objScale;
+                bird.height = 24 * objScale;
+                bird.x = app.renderer.width / 2;
+                bird.y = app.renderer.height / 2;
+                app.stage.addChild(bird);
+
+                app.stage.on('pointerdown', onTouchStart);
+
+                function onTouchStart() {
+                    bird.y -= 10;
+                }
+
+                app.start();
+            }
 
             app.ticker.add(function() {
                 postition += 1;
