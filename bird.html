@@ -22,6 +22,8 @@
                 sky2,
                 bird;
 
+            app.stage.interactive = true;
+
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
 
@@ -52,6 +54,12 @@
                 bird.x = app.renderer.width / 2;
                 bird.y = app.renderer.height / 2;
                 app.stage.addChild(bird);
+
+                app.stage.on('pointerdown', onTouchStart);
+
+                function onTouchStart() {
+                    bird.y -= 10;
+                }
 
                 app.start();
             }
