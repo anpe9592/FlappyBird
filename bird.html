@@ -20,7 +20,7 @@
                 ground2,
                 sky,
                 sky2,
-                bird;
+                bird = [];
 
             app.stage.interactive = true;
 
@@ -46,19 +46,33 @@
                 sky.y = app.renderer.height - ground.height - sky.height;
                 sky2.y = app.renderer.height - ground.height - sky2.height;
                 app.stage.addChild(sky, sky2);
-            
-                bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
-                bird.anchor.set(0.5);
-                bird.width = 34 * objScale;
-                bird.height = 24 * objScale;
-                bird.x = app.renderer.width / 2;
-                bird.y = app.renderer.height / 2;
-                app.stage.addChild(bird);
+
+                for (let i = 0; i < 4; i++) {
+                    let num = i + 1;
+                    let tmpBird = PIXI.Texture.fromImage('assets/bird/bird-0'+ num +'.png');
+                    bird.push(tmpBird);
+                    // bird[i].anchor.set(0.5);
+                    // bird[i].width = 34 * objScale;
+                    // bird[i].height = 24 * objScale;
+                    // bird[i].x = (app.renderer.width / 2) + 10;
+                    // bird[i].y = (app.renderer.height / 2) + 10;
+                    // app.stage.addChild(bird[i]);
+                }
+
+                let birdy = new PIXI.extras.AnimatedSprite(bird);
+                birdy.anchor.set(0.5);
+                birdy.x = (app.renderer.width / 2) + 10;
+                birdy.y = (app.renderer.height / 2) + 10;
+                birdy.scale.set(objScale);
+                birdy.animationSpeed = 0.1;
+                app.stage.addChild(birdy);
 
                 app.stage.on('pointerdown', onTouchStart);
 
                 function onTouchStart() {
-                    bird.y -= 10;
+                    birdy.play();
+                    
+                    birdy.y -= 10;
                 }
 
                 app.start();
