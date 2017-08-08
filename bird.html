@@ -6,6 +6,12 @@
         <script src="js/pixi.js" type="text/javascript"></script>
         <script src="js/matter.js" type="text/javascript"></script>
         <script>
+            let Engine = Matter.Engine,
+            World = Matter.World,
+            Bodies = Matter.Bodies;
+
+            let engine = Engine.create();
+
             const app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
             document.body.appendChild(app.view);
 
@@ -18,11 +24,13 @@
             let postition = 0,
                 ground,
                 ground2,
+                groundBox,
                 sky,
                 sky2,
                 bird = [],
-                birdy;
-
+                birdy,
+                birdBox;
+                
             app.stage.interactive = true;
 
             function onAssetsLoaded(loader) {
@@ -82,8 +90,15 @@
                 app.start();
             }
 
+            birdBox = Bodies.rectangle(((app.renderer.width / 2) + 10), ((app.renderer.height / 2) + 10), 80, 80);
+            groundBox = Bodies.rectangle(0, 473, 336 * 1.2, 112 * 1.2, { isStatic: true });
+
             app.ticker.add(function() {
                 postition += 1;
+
+                birdy.position.x = birdBox.position.x;
+                birdy.position.y = birdBox.position.y;
+                birdy.rotation = birdBox.angle;
 
                 sky.x = -(postition * 0.6);
                 sky.x %= sky.width * 2;
@@ -113,6 +128,9 @@
                 }
                 ground2.x -= ground2.width;
             });
+
+            World.add(engine.world, [birdBox, groundBox]);
+            Engine.run(engine);
         </script>
     </body>
 </html>
