@@ -6,6 +6,12 @@
         <script src="js/pixi.js" type="text/javascript"></script>
         <script src="js/matter.js" type="text/javascript"></script>
         <script>
+            let Engine = Matter.Engine,
+            World = Matter.World,
+            Bodies = Matter.Bodies;
+
+            let engine = Engine.create();
+
             const app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
             document.body.appendChild(app.view);
 
@@ -18,10 +24,13 @@
             let postition = 0,
                 ground,
                 ground2,
+                groundBox,
                 sky,
                 sky2,
-                bird;
-
+                bird = [],
+                birdy,
+                birdBox;
+                
             app.stage.interactive = true;
 
             function onAssetsLoaded(loader) {
@@ -46,26 +55,49 @@
                 sky.y = app.renderer.height - ground.height - sky.height;
                 sky2.y = app.renderer.height - ground.height - sky2.height;
                 app.stage.addChild(sky, sky2);
-            
-                bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png');
-                bird.anchor.set(0.5);
-                bird.width = 34 * objScale;
-                bird.height = 24 * objScale;
-                bird.x = app.renderer.width / 2;
-                bird.y = app.renderer.height / 2;
-                app.stage.addChild(bird);
 
-                app.stage.on('pointerdown', onTouchStart);
+                for (let i = 0; i < 5; i++) {
+                    let num = i + 1;
+                    let tmpBird = PIXI.Texture.fromImage('assets/bird/bird-0'+ num +'.png');
+                    bird.push(tmpBird);
+                    // bird[i].anchor.set(0.5);
+                    // bird[i].width = 34 * objScale;
+                    // bird[i].height = 24 * objScale;
+                    // bird[i].x = (app.renderer.width / 2) + 10;
+                    // bird[i].y = (app.renderer.height / 2) + 10;
+                    // app.stage.addChild(bird[i]);
+                }
 
-                function onTouchStart() {
-                    bird.y -= 10;
+                birdy = new PIXI.extras.AnimatedSprite(bird);
+                birdy.anchor.set(0.5);
+                birdy.x = (app.renderer.width / 2) + 10;
+                birdy.y = (app.renderer.height / 2) + 10;
+                birdy.scale.set(objScale);
+                birdy.animationSpeed = 0.1;
+                birdy.loop = false;
+                app.stage.addChild(birdy);
+
+                app.stage.on('pointerdown', onTouchAnimation);
+
+                function onTouchAnimation() {
+                    birdy.play();
+                    birdy.onComplete = () => {
+                        birdy.gotoAndStop(0);
+                    };
                 }
 
                 app.start();
             }
 
+            birdBox = Bodies.rectangle(((app.renderer.width / 2) + 10), ((app.renderer.height / 2) + 10), 80, 80);
+            groundBox = Bodies.rectangle(0, 473, 336 * 1.2, 112 * 1.2, { isStatic: true });
+
             app.ticker.add(function() {
                 postition += 1;
+
+                birdy.position.x = birdBox.position.x;
+                birdy.position.y = birdBox.position.y;
+                birdy.rotation = birdBox.angle;
 
                 sky.x = -(postition * 0.6);
                 sky.x %= sky.width * 2;
@@ -95,6 +127,9 @@
                 }
                 ground2.x -= ground2.width;
             });
+
+            World.add(engine.world, [birdBox, groundBox]);
+            Engine.run(engine);
         </script>
     </body>
 </html>
