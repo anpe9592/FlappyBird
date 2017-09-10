@@ -77,13 +77,12 @@
                 birdy.loop = false;
                 app.stage.addChild(birdy);
 
-                app.stage.on('pointerdown', onTouchStart);
+                app.stage.on('pointerdown', onTouchAnimation);
 
-                function onTouchStart() {
+                function onTouchAnimation() {
                     birdy.play();
                     birdy.onComplete = () => {
                         birdy.gotoAndStop(0);
-                        birdy.y -= 10;
                     };
                 }
 
