@@ -11,6 +11,15 @@
             const gWidth = 288,
                   gHeight = 512;
 
+            let Engine = Matter.Engine,
+                World = Matter.World,
+                Bodies = Matter.Bodies,
+                Body = Matter.Body;
+
+            let engine;
+
+            engine = Engine.create();
+
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
 
@@ -22,7 +31,15 @@
                 bird.bird.rotation += 0.1 * delta;
             });
 
-            
+            function run() {
+                Engine.run(engine);
+            }
+
+            window.onload = init();
+
+            function init() {
+                run();
+            }
 
         </script>
     </body>
