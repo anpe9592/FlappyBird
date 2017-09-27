@@ -26,13 +26,13 @@
             let bird = new Bird();
             bird.addBird();
 
-            // Listen for animate update
-            app.ticker.add(function(delta) {
-                bird.bird.rotation += 0.1 * delta;
-            });
-
             function run() {
                 Engine.run(engine);
+
+                // Listen for animate update
+                app.ticker.add(function(delta) {
+                    bird.bird.rotation += 0.1 * delta;
+                });
             }
 
             window.onload = init();
