@@ -3,10 +3,27 @@
         <title>Flappy Bird</title>
     </head>
     <body>
+        <script src="js/bird.js" type="text/javascript"></script>
+
         <script src="js/pixi.js" type="text/javascript"></script>
         <script src="js/matter.js" type="text/javascript"></script>
         <script>
+            const gWidth = 288,
+                  gHeight = 512;
+
+            const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
+            document.body.appendChild(app.view);
+
+            let bird = new Bird();
+            bird.addBird();
+
+            // Listen for animate update
+            app.ticker.add(function(delta) {
+                bird.bird.rotation += 0.1 * delta;
+            });
+
             
+
         </script>
     </body>
 </html>
