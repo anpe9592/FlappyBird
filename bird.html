@@ -35,9 +35,20 @@
                 });
             }
 
+            function addEventListeners() {
+                window.addEventListener('keydown', handleKeydown, false);
+            }
+
+            function handleKeydown(event) {
+                if (event.keyCode === 32) {
+                    bird.bumpBird();
+                }
+            }
+
             window.onload = init();
 
             function init() {
+                addEventListeners();
                 run();
             }
 
