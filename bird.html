@@ -24,18 +24,37 @@
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
 
-            let ground = new Ground;
+            let ground = new Ground,
+                ground2 = new Ground;
             ground.addGround();
+            ground2.addGround();
 
             let bird = new Bird();
             bird.addBird();
 
+            let pos = 0;
             function run() {
                 Engine.run(engine);
 
                 // Listen for animate update
                 app.ticker.add(function(delta) {
+                    pos += 1;
+
                     bird.bird.position = bird.body.position;
+
+                    ground.ground.x = -(pos * 0.6);
+                    ground.ground.x %= ground.ground.width * 2;
+                    if (ground.ground.x < 0) {
+                        ground.ground.x += ground.ground.width * 2;
+                    }
+                    ground.ground.x -= ground.ground.width;
+
+                    ground2.ground.x = -(pos * 0.6) + ground2.ground.width;
+                    ground2.ground.x %= ground2.ground.width * 2;
+                    if (ground2.ground.x < 0) {
+                        ground2.ground.x += ground2.ground.width * 2;
+                    }
+                    ground2.ground.x -= ground2.ground.width;
                 });
             }
 

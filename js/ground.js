@@ -1,7 +1,7 @@
 class Ground {
     constructor() {
-        this.groundWidth = 336;
-        this.groundHeight = 112;
+        this.groundWidth = 336 * 1.2;
+        this.groundHeight = 112 * 1.2;
 
         // create a new Sprite from an image patha
         this.ground = PIXI.Sprite.fromImage('assets/world/land.png')
@@ -14,7 +14,7 @@ class Ground {
 
         // move the sprite to the center of the screen
         //this.ground.x = app.renderer.width / 2;
-        this.ground.y = app.renderer.height - this.ground.height;
+        this.ground.y = gHeight;
 
         this.body = Bodies.rectangle(this.ground.x, this.ground.y, this.groundWidth, this.groundHeight, { isStatic: true});
     }
