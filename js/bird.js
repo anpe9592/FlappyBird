@@ -23,4 +23,11 @@ class Bird {
         app.stage.addChild(this.bird);
         World.add(engine.world, this.body);
     }
+
+    bumpBird() {
+        let b = this.body;
+        let p = this.body.position;
+        let f = { x: 0, y: -0.05 };
+        Body.applyForce(b, p, f);
+    }
 }
