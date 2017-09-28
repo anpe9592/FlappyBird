@@ -31,7 +31,7 @@
 
                 // Listen for animate update
                 app.ticker.add(function(delta) {
-                    bird.bird.rotation += 0.1 * delta;
+                    bird.bird.position = bird.body.position;
                 });
             }
 
