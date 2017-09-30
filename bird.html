@@ -23,18 +23,20 @@
 
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
-            
-            app.stop();
 
             let bird,
                 ground,
                 ground2,
                 sky,
                 sky2;
-
-            PIXI.loader
-                .add('bird')
-                .load(onAssetsLoaded);
+            
+            function setup() {
+                app.stop();
+                
+                PIXI.loader
+                    .add('bird')
+                    .load(onAssetsLoaded);
+            }
 
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
@@ -115,6 +117,7 @@
             window.onload = init();
 
             function init() {
+                setup();
                 addEventListeners();
                 run();
             }
