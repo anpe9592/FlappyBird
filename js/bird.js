@@ -1,7 +1,7 @@
 class Bird {
     constructor() {
-        this.birdWidth = 34;
-        this.birdHeight = 24;
+        this.birdWidth = 34 * 1.2;
+        this.birdHeight = 24 * 1.2;
 
         // create a new Sprite from an image patha
         this.bird = PIXI.Sprite.fromImage('assets/bird/bird-01.png')
