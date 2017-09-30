@@ -24,6 +24,8 @@
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
 
+            app.stop();
+
             let ground = new Ground,
                 ground2 = new Ground;
             ground.addGround();
@@ -49,6 +51,7 @@
                     }
                     ground.ground.x -= ground.ground.width;
 
+                    
                     ground2.ground.x = -(pos * 0.6) + ground2.ground.width;
                     ground2.ground.x %= ground2.ground.width * 2;
                     if (ground2.ground.x < 0) {

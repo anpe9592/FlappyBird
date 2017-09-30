@@ -1,7 +1,7 @@
 class Ground {
     constructor() {
-        this.groundWidth = 336 * 1.2;
-        this.groundHeight = 112 * 1.2;
+        this.groundWidth = 336;
+        this.groundHeight = 112;
 
         // create a new Sprite from an image patha
         this.ground = PIXI.Sprite.fromImage('assets/world/land.png')
