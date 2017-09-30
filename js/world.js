@@ -4,8 +4,8 @@
 class WorldA {
     constructor(assetName, width, height, y, gameHeight, mass) {
         this.mass = mass;
-        this.w = width * 1.2;
-        this.h = height * 1.2;
+        this.w = width;
+        this.h = height;
 
         // create a new Sprite from an image patha
         this.asset = PIXI.Sprite.fromImage(assetName)
