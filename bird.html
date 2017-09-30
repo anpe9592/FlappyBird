@@ -23,16 +23,45 @@
 
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
-
+            
             app.stop();
 
-            let ground = new Ground,
-                ground2 = new Ground;
-            ground.addGround();
-            ground2.addGround();
-
             let bird = new Bird();
-            bird.addBird();
+
+            PIXI.loader
+                .add('bird')
+                .load(onAssetsLoaded);
+
+            function onAssetsLoaded(loader) {
+                const objScale = 1.2;
+
+                ground = PIXI.Sprite.fromImage('assets/world/land.png');
+                ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
+                ground.width = 336 * objScale;
+                ground2.width = 336 * objScale;
+                ground.height = 112 * objScale;
+                ground2.height = 112 * objScale;
+                ground.y = app.renderer.height - ground.height;
+                ground2.y = app.renderer.height - ground.height;
+                app.stage.addChild(ground, ground2);
+
+                let groundBox= Bodies.rectangle(100, ground.y + 15, gWidth, 30, { isStatic: true});
+                World.add(engine.world, groundBox);
+
+                sky = PIXI.Sprite.fromImage('assets/world/sky.png');
+                sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
+                sky.width = 276 * objScale;
+                sky2.width = 276 * objScale;
+                sky.height = 109 * objScale;
+                sky2.height = 109 * objScale;
+                sky.y = app.renderer.height - ground.height - sky.height;
+                sky2.y = app.renderer.height - ground.height - sky2.height;
+                app.stage.addChild(sky, sky2);
+
+                bird.addBird();
+
+                app.start();
+            }
 
             let pos = 0;
             function run() {
@@ -44,20 +73,20 @@
 
                     bird.bird.position = bird.body.position;
 
-                    ground.ground.x = -(pos * 0.6);
-                    ground.ground.x %= ground.ground.width * 2;
-                    if (ground.ground.x < 0) {
-                        ground.ground.x += ground.ground.width * 2;
+                    ground.x = -(pos * 0.6);
+                    ground.x %= ground.width * 2;
+                    if (ground.x < 0) {
+                        ground.x += ground.width * 2;
                     }
-                    ground.ground.x -= ground.ground.width;
+                    ground.x -= ground.width;
 
                     
-                    ground2.ground.x = -(pos * 0.6) + ground2.ground.width;
-                    ground2.ground.x %= ground2.ground.width * 2;
-                    if (ground2.ground.x < 0) {
-                        ground2.ground.x += ground2.ground.width * 2;
+                    ground2.x = -(pos * 0.6) + ground2.width;
+                    ground2.x %= ground2.width * 2;
+                    if (ground2.x < 0) {
+                        ground2.x += ground2.width * 2;
                     }
-                    ground2.ground.x -= ground2.ground.width;
+                    ground2.x -= ground2.width;
                 });
             }
 
