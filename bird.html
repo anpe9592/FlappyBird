@@ -39,42 +39,19 @@
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
 
-                /*
-                ground = PIXI.Sprite.fromImage('assets/world/land.png');
-                ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
-                ground.width = 336 * objScale;
-                ground2.width = 336 * objScale;
-                ground.height = 112 * objScale;
-                ground2.height = 112 * objScale;
-                ground.y = app.renderer.height - ground.height;
-                ground2.y = app.renderer.height - ground.height;
-                app.stage.addChild(ground, ground2);
-
-                let groundBox= Bodies.rectangle(100, ground.y + 15, gWidth, 30, { isStatic: true});
-                World.add(engine.world, groundBox);
-                */
-
                 let assetpath = 'assets/world/land.png';
-                ground = new WorldA(assetpath, 336, 112, app.renderer.height - 112, gHeight, true);
-                ground2 = new WorldA(assetpath, 336, 112, app.renderer.height - 112, gHeight, true);
+                let groundH = 112 * 1.2,
+                    groundW = 336 * 1.2;
+                ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground2 = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
                 ground.addAsset();
                 ground2.addAsset();
 
-                /*
-                sky = PIXI.Sprite.fromImage('assets/world/sky.png');
-                sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
-                sky.width = 276 * objScale;
-                sky2.width = 276 * objScale;
-                sky.height = 109 * objScale;
-                sky2.height = 109 * objScale;
-                sky.y = app.renderer.height - ground.height - sky.height;
-                sky2.y = app.renderer.height - ground.height - sky2.height;
-                app.stage.addChild(sky, sky2);
-                */
-
-                assetpath = 'assets/world/sky.png';
-                sky = new WorldA(assetpath, 276, 109, app.renderer.height - 112 - 109, gHeight, false);
-                sky2 = new WorldA(assetpath, 276, 109, app.renderer.height - 112 - 109, gHeight, false);
+                let assetpath2 = 'assets/world/sky.png';
+                let skyH = 109 * 1.2,
+                    skyW = 276 * 1.2;
+                sky = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
+                sky2 = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
                 sky.addAsset();
                 sky2.addAsset();
 
@@ -93,6 +70,20 @@
                     pos += 1;
 
                     bird.bird.position = bird.body.position;
+
+                    sky.asset.x = -(pos * 0.6);
+                    sky.asset.x %= sky.asset.width * 2;
+                    if (sky.asset.x < 0) {
+                        sky.asset.x += sky.asset.width * 2;
+                    }
+                    sky.asset.x -= sky.asset.width;
+                
+                    sky2.asset.x = -(pos * 0.6) + sky2.asset.width;
+                    sky2.asset.x %= sky2.asset.width * 2;
+                    if(sky2.asset.x < 0) {
+                        sky2.asset.x += sky2.asset.width * 2;
+                    }
+                    sky2.asset.x -= sky2.asset.width;
 
                     ground.asset.x = -(pos * 0.6);
                     ground.asset.x %= ground.asset.width * 2;
