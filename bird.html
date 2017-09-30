@@ -26,7 +26,11 @@
             
             app.stop();
 
-            let bird;
+            let bird,
+                ground,
+                ground2,
+                sky,
+                sky2;
 
             PIXI.loader
                 .add('bird')
@@ -35,6 +39,7 @@
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
 
+                /*
                 ground = PIXI.Sprite.fromImage('assets/world/land.png');
                 ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
                 ground.width = 336 * objScale;
@@ -47,7 +52,15 @@
 
                 let groundBox= Bodies.rectangle(100, ground.y + 15, gWidth, 30, { isStatic: true});
                 World.add(engine.world, groundBox);
+                */
 
+                let assetpath = 'assets/world/land.png';
+                ground = new WorldA(assetpath, 336, 112, app.renderer.height - 112, gHeight, true);
+                ground2 = new WorldA(assetpath, 336, 112, app.renderer.height - 112, gHeight, true);
+                ground.addAsset();
+                ground2.addAsset();
+
+                /*
                 sky = PIXI.Sprite.fromImage('assets/world/sky.png');
                 sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
                 sky.width = 276 * objScale;
@@ -57,6 +70,13 @@
                 sky.y = app.renderer.height - ground.height - sky.height;
                 sky2.y = app.renderer.height - ground.height - sky2.height;
                 app.stage.addChild(sky, sky2);
+                */
+
+                assetpath = 'assets/world/sky.png';
+                sky = new WorldA(assetpath, 276, 109, app.renderer.height - 112 - 109, gHeight, false);
+                sky2 = new WorldA(assetpath, 276, 109, app.renderer.height - 112 - 109, gHeight, false);
+                sky.addAsset();
+                sky2.addAsset();
 
                 bird = new Bird();
                 bird.addBird();
@@ -74,20 +94,20 @@
 
                     bird.bird.position = bird.body.position;
 
-                    ground.x = -(pos * 0.6);
-                    ground.x %= ground.width * 2;
-                    if (ground.x < 0) {
-                        ground.x += ground.width * 2;
+                    ground.asset.x = -(pos * 0.6);
+                    ground.asset.x %= ground.asset.width * 2;
+                    if (ground.asset.x < 0) {
+                        ground.asset.x += ground.asset.width * 2;
                     }
-                    ground.x -= ground.width;
+                    ground.asset.x -= ground.asset.width;
 
                     
-                    ground2.x = -(pos * 0.6) + ground2.width;
-                    ground2.x %= ground2.width * 2;
-                    if (ground2.x < 0) {
-                        ground2.x += ground2.width * 2;
+                    ground2.asset.x = -(pos * 0.6) + ground2.asset.width;
+                    ground2.asset.x %= ground2.asset.width * 2;
+                    if (ground2.asset.x < 0) {
+                        ground2.asset.x += ground2.asset.width * 2;
                     }
-                    ground2.x -= ground2.width;
+                    ground2.asset.x -= ground2.asset.width;
                 });
             }
 
