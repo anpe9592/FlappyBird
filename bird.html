@@ -28,7 +28,9 @@
                 ground,
                 ground2,
                 sky,
-                sky2;
+                sky2,
+                pipeup,
+                pipedown;
             
             function setup() {
                 app.stop();
@@ -36,6 +38,37 @@
                 PIXI.loader
                     .add('bird')
                     .load(onAssetsLoaded);
+            }
+
+            class Pipe {
+                constructor(up, x, y) {
+                    this.pipeWidth = 30 * 1.2;
+                    this.pipeHeight = 160 * 1.2;
+
+                    // create a new Sprite from an image patha
+                    if (up === true) {
+                        this.pipe = PIXI.Sprite.fromImage('assets/world/PipeUp.png')
+                    } else {
+                        this.pipe = PIXI.Sprite.fromImage('assets/world/PipeDown.png')
+                    }
+
+                    // center the sprite's anchor point
+                    this.pipe.anchor.set(0.5);
+
+                    this.pipe.width = this.pipeWidth;
+                    this.pipe.height = this.pipeHeight;
+
+                    // moves the sprite on the screen
+                    this.pipe.x = app.renderer.width / 2;
+                    this.pipe.y = app.renderer.height / 2;
+
+                    this.body = Bodies.rectangle(this.pipe.x, this.pipe.y, this.pipeWidth, this.pipeHeight, { isStatic: true});
+                }
+                
+                addPipe() {
+                    app.stage.addChild(this.pipe);
+                    World.add(engine.world, this.body);
+                }
             }
 
             function onAssetsLoaded(loader) {
@@ -56,6 +89,12 @@
                 sky2 = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
                 sky.addAsset();
                 sky2.addAsset();
+
+                pipeup = new Pipe(true);
+                pipeup.addPipe();
+
+                pipedown = new Pipe(false);
+                pipedown.addPipe();
 
                 bird = new Bird();
                 bird.addBird();
@@ -86,6 +125,11 @@
                         sky2.asset.x += sky2.asset.width * 2;
                     }
                     sky2.asset.x -= sky2.asset.width;
+
+                    pipeup.body.x = -(pos * 0.6);
+                    pipeup.pipe.position = pipeup.body.position;
+                    pipedown.body.x = -(pos * 0.6);
+                    pipedown.pipe.position = pipedown.body.position;
 
                     ground.asset.x = -(pos * 0.6);
                     ground.asset.x %= ground.asset.width * 2;
