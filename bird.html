@@ -59,7 +59,7 @@
                     this.pipe.height = this.pipeHeight;
 
                     // moves the sprite on the screen
-                    this.pipe.x = app.renderer.width / 2;
+                    this.pipe.x = app.renderer.width;
                     this.pipe.y = app.renderer.height / 2;
 
                     this.body = Bodies.rectangle(this.pipe.x, this.pipe.y, this.pipeWidth, this.pipeHeight, { isStatic: true});
@@ -93,8 +93,10 @@
                 pipeup = new Pipe(true);
                 pipeup.addPipe();
 
+                /*
                 pipedown = new Pipe(false);
                 pipedown.addPipe();
+                */
 
                 bird = new Bird();
                 bird.addBird();
@@ -126,10 +128,14 @@
                     }
                     sky2.asset.x -= sky2.asset.width;
 
-                    pipeup.body.x = -(pos * 0.6);
+
+                    pipeup.body.position.x = -(pos * 0.6);
                     pipeup.pipe.position = pipeup.body.position;
-                    pipedown.body.x = -(pos * 0.6);
-                    pipedown.pipe.position = pipedown.body.position;
+                    if (pipeup.body.position.x < 0) {
+                        pipeup.body.position.x += pipeup.body.position.x + gWidth;
+                        pipeup.pipe.position = pipeup.body.position;
+                    }
+
 
                     ground.asset.x = -(pos * 0.6);
                     ground.asset.x %= ground.asset.width * 2;
