@@ -60,7 +60,7 @@
 
                     // moves the sprite on the screen
                     this.pipe.x = app.renderer.width;
-                    this.pipe.y = app.renderer.height / 2;
+                    this.pipe.y = app.renderer.height - 230;
 
                     this.body = Bodies.rectangle(this.pipe.x, this.pipe.y, this.pipeWidth, this.pipeHeight, { isStatic: true});
                 }
