@@ -128,14 +128,9 @@
                     }
                     sky2.asset.x -= sky2.asset.width;
 
-
-                    pipeup.body.position.x = -(pos * 0.6);
+                    let t = { x: -2, y: 0 };
+                    Body.translate(pipeup.body, t);
                     pipeup.pipe.position = pipeup.body.position;
-                    if (pipeup.body.position.x < 0) {
-                        pipeup.body.position.x += pipeup.body.position.x + gWidth;
-                        pipeup.pipe.position = pipeup.body.position;
-                    }
-
 
                     ground.asset.x = -(pos * 0.6);
                     ground.asset.x %= ground.asset.width * 2;
