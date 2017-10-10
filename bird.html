@@ -128,6 +128,11 @@
                     }
                     sky2.asset.x -= sky2.asset.width;
 
+                    console.log(pipeup.body.position);
+                    if (pipeup.body.position.x < -30) {
+                        pipeup = new Pipe(true);
+                        pipeup.addPipe();
+                    }
                     let t = { x: -2, y: 0 };
                     Body.translate(pipeup.body, t);
                     pipeup.pipe.position = pipeup.body.position;
