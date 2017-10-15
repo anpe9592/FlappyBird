@@ -52,8 +52,6 @@
                         this.pipe = PIXI.Sprite.fromImage('assets/world/PipeDown.png')
                     }
 
-                    let tmp = Math.floor((Math.random() * (app.renderer.height - 55)) + (app.renderer.height - 230));
-
                     // center the sprite's anchor point
                     this.pipe.anchor.set(0.5);
 
@@ -62,9 +60,9 @@
 
                     // moves the sprite on the screen
                     this.pipe.x = app.renderer.width;
-                    //this.pipe.y = app.renderer.height - 55;
-                    //this.pipe.y = app.renderer.height - 230;
-                    this.pipe.y = tmp;
+                    //this.pipe.y = 457; // lowest pos above grond
+                    //this.pipe.y = 282; // highest pos above ground
+                    this.pipe.y = getRandomArbitrary(282, 457);
 
                     this.body = Bodies.rectangle(this.pipe.x, this.pipe.y, this.pipeWidth, this.pipeHeight, { isStatic: true});
                 }
@@ -73,6 +71,10 @@
                     app.stage.addChild(this.pipe);
                     World.add(engine.world, this.body);
                 }
+            }
+
+            function getRandomArbitrary(min, max) {
+                return Math.random() * (max - min) + min;
             }
 
             function onAssetsLoaded(loader) {
