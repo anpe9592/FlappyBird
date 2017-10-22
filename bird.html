@@ -87,17 +87,12 @@
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
 
-                let assetpath = 'assets/world/land.png';
                 let groundH = 112 * 1.2,
                     groundW = 336 * 1.2;
-                ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
-                ground2 = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
-                ground.addAsset();
-                ground2.addAsset();
-
-                let assetpath2 = 'assets/world/sky.png';
                 let skyH = 109 * 1.2,
                     skyW = 276 * 1.2;
+
+                let assetpath2 = 'assets/world/sky.png';
                 sky = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
                 sky2 = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
                 sky.addAsset();
@@ -108,6 +103,12 @@
 
                 pipedown = new Pipe(false, pipeup.getPipeY());
                 pipedown.addPipe();
+
+                let assetpath = 'assets/world/land.png';
+                ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground2 = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground.addAsset();
+                ground2.addAsset();
 
                 bird = new Bird();
                 bird.addBird();
@@ -139,21 +140,6 @@
                     }
                     sky2.asset.x -= sky2.asset.width;
 
-                    if (pipeup.body.position.x < -30) {
-                        pipeup = new Pipe(true);
-                        pipeup.addPipe();
-                    }
-                    let t = { x: -2, y: 0 };
-                    Body.translate(pipeup.body, t);
-                    pipeup.pipe.position = pipeup.body.position;
-
-                    if (pipedown.body.position.x < -30) {
-                        pipedown = new Pipe(false, pipeup.getPipeY());
-                        pipedown.addPipe();
-                    }
-                    Body.translate(pipedown.body, t);
-                    pipedown.pipe.position = pipedown.body.position;
-
                     ground.asset.x = -(pos * 0.6);
                     ground.asset.x %= ground.asset.width * 2;
                     if (ground.asset.x < 0) {
@@ -168,6 +154,21 @@
                         ground2.asset.x += ground2.asset.width * 2;
                     }
                     ground2.asset.x -= ground2.asset.width;
+
+                    if (pipeup.body.position.x < -30) {
+                        pipeup = new Pipe(true);
+                        pipeup.addPipe();
+                    }
+                    let t = { x: -2, y: 0 };
+                    Body.translate(pipeup.body, t);
+                    pipeup.pipe.position = pipeup.body.position;
+
+                    if (pipedown.body.position.x < -30) {
+                        pipedown = new Pipe(false, pipeup.getPipeY());
+                        pipedown.addPipe();
+                    }
+                    Body.translate(pipedown.body, t);
+                    pipedown.pipe.position = pipedown.body.position;
                 });
             }
 
