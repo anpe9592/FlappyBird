@@ -17,7 +17,8 @@
             let Engine = Matter.Engine,
                 World = Matter.World,
                 Bodies = Matter.Bodies,
-                Body = Matter.Body;
+                Body = Matter.Body,
+                Events = Matter.Events;
 
             let engine;
 
@@ -44,7 +45,8 @@
                 sky,
                 sky2,
                 pipeup,
-                pipedown;
+                pipedown,
+                collision = false;
             
             function setup() {
                 app.stop();
@@ -52,6 +54,22 @@
                 PIXI.loader
                     .add('bird')
                     .load(onAssetsLoaded);
+            }
+
+            function createBird() {
+                bird = new Bird();
+                bird.bird.parentGroup = birdGroup;
+                bird.addBird();
+            }
+
+            function createPipe() {
+                pipeup = new Pipe(true);
+                pipeup.pipe.parentGroup = pipeGroup;
+                pipeup.addPipe();
+
+                pipedown = new Pipe(false, pipeup.getPipeY());
+                pipedown.pipe.parentGroup = pipeGroup;
+                pipedown.addPipe();
             }
 
             function onAssetsLoaded(loader) {
@@ -70,15 +88,7 @@
                 sky.addAsset();
                 sky2.addAsset();
 
-                //bunny.parentGroup = greenGroup;
-
-                pipeup = new Pipe(true);
-                pipeup.pipe.parentGroup = pipeGroup;
-                pipeup.addPipe();
-
-                pipedown = new Pipe(false, pipeup.getPipeY());
-                pipedown.pipe.parentGroup = pipeGroup;
-                pipedown.addPipe();
+                createPipe();
 
                 let assetpath = 'assets/world/land.png';
                 ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
@@ -88,11 +98,24 @@
                 ground.addAsset();
                 ground2.addAsset();
 
-                bird = new Bird();
-                bird.bird.parentGroup = birdGroup;
-                bird.addBird();
+                createBird();
 
                 app.start();
+            }
+
+            function restartGame() {
+                collision = false;
+                bird.removeBird();
+                pipedown.removePipe();
+                pipeup.removePipe();
+
+                createBird();
+                createPipe();
+            }
+
+            function endGame() {
+                console.log("Game end");
+                collision = true;
             }
 
             let pos = 0;
@@ -101,6 +124,7 @@
 
                 // Listen for animate update
                 app.ticker.add(function(delta) {
+                    if (collision) return;
                     pos += 1;
 
                     bird.bird.position = bird.body.position;
@@ -149,6 +173,8 @@
                     Body.translate(pipedown.body, t);
                     pipedown.pipe.position = pipedown.body.position;
                 });
+
+                Events.on(engine, 'collisionStart', endGame);
             }
 
             function addEventListeners() {
@@ -156,8 +182,14 @@
             }
 
             function handleKeydown(event) {
-                if (event.keyCode === 32) {
-                    bird.bumpBird();
+                if (!collision) {
+                    if (event.keyCode === 32) {
+                        bird.bumpBird();
+                    }
+                } else {
+                    if (event.keyCode === 32) {
+                        restartGame();
+                    }
                 }
             }
 

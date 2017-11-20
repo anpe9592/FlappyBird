@@ -25,6 +25,7 @@ class Bird {
     }
 
     removeBird() {
+        app.stage.removeChild(this.bird);
         World.remove(engine.world, this.body);
     }
 

@@ -33,6 +33,11 @@ class Pipe {
         World.add(engine.world, this.body);
     }
 
+    removePipe() {
+        app.stage.removeChild(this.pipe);
+        World.remove(engine.world, this.body);
+    }
+
     getPipeY() {
         return this.pipe.y;
     }
