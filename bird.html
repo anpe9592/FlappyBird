@@ -3,133 +3,209 @@
         <title>Flappy Bird</title>
     </head>
     <body>
+        <script src="js/bird.js" type="text/javascript"></script>
+        <script src="js/pipe.js" type="text/javascript"></script>
+        <script src="js/world.js" type="text/javascript"></script>
+
         <script src="js/pixi.js" type="text/javascript"></script>
+        <script src="js/pixi-layers.js" type="text/javascript"></script>
         <script src="js/matter.js" type="text/javascript"></script>
         <script>
+            const gWidth = 288,
+                  gHeight = 512;
+
             let Engine = Matter.Engine,
-            World = Matter.World,
-            Bodies = Matter.Bodies;
+                World = Matter.World,
+                Bodies = Matter.Bodies,
+                Body = Matter.Body,
+                Events = Matter.Events;
 
-            let engine = Engine.create();
+            let engine;
 
-            const app = new PIXI.Application(288, 512, {backgroundColor : 0x51C0C9});
+            engine = Engine.create();
+            engine.world.gravity.y = 1.5;
+
+            const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
 
-            app.stop();
+            let skyGroup = new PIXI.display.Group(0, true);
+            let pipeGroup = new PIXI.display.Group(1, true);
+            let groundGroup = new PIXI.display.Group(2, true);
+            let birdGroup= new PIXI.display.Group(3, true);
 
-            PIXI.loader
-                .add('bird')
-                .load(onAssetsLoaded);
+            app.stage = new PIXI.display.Stage();
+            app.stage.group.enableSort = true;
+            app.stage.addChild(new PIXI.display.Layer(skyGroup));
+            app.stage.addChild(new PIXI.display.Layer(pipeGroup));
+            app.stage.addChild(new PIXI.display.Layer(groundGroup));
+            app.stage.addChild(new PIXI.display.Layer(birdGroup));
 
-            let postition = 0,
+            let bird,
                 ground,
                 ground2,
-                groundBox,
                 sky,
                 sky2,
-                bird = [],
-                birdy,
-                birdBox;
+                pipeup,
+                pipedown,
+                collision = false;
+            
+            function setup() {
+                app.stop();
                 
-            app.stage.interactive = true;
+                PIXI.loader
+                    .add('bird')
+                    .load(onAssetsLoaded);
+            }
+
+            function createBird() {
+                bird = new Bird();
+                bird.bird.parentGroup = birdGroup;
+                bird.addBird();
+            }
+
+            function createPipe() {
+                pipeup = new Pipe(true);
+                pipeup.pipe.parentGroup = pipeGroup;
+                pipeup.addPipe();
+
+                pipedown = new Pipe(false, pipeup.getPipeY());
+                pipedown.pipe.parentGroup = pipeGroup;
+                pipedown.addPipe();
+            }
 
             function onAssetsLoaded(loader) {
                 const objScale = 1.2;
 
-                ground = PIXI.Sprite.fromImage('assets/world/land.png');
-                ground2 = PIXI.Sprite.fromImage('assets/world/land.png');
-                ground.width = 336 * objScale;
-                ground2.width = 336 * objScale;
-                ground.height = 112 * objScale;
-                ground2.height = 112 * objScale;
-                ground.y = app.renderer.height - ground.height;
-                ground2.y = app.renderer.height - ground.height;
-                app.stage.addChild(ground, ground2);
+                let groundH = 112 * 1.2,
+                    groundW = 336 * 1.2;
+                let skyH = 109 * 1.2,
+                    skyW = 276 * 1.2;
 
-                sky = PIXI.Sprite.fromImage('assets/world/sky.png');
-                sky2 = PIXI.Sprite.fromImage('assets/world/sky.png');
-                sky.width = 276 * objScale;
-                sky2.width = 276 * objScale;
-                sky.height = 109 * objScale;
-                sky2.height = 109 * objScale;
-                sky.y = app.renderer.height - ground.height - sky.height;
-                sky2.y = app.renderer.height - ground.height - sky2.height;
-                app.stage.addChild(sky, sky2);
+                let assetpath2 = 'assets/world/sky.png';
+                sky = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
+                sky2 = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
+                sky.asset.parentGroup = skyGroup;
+                sky2.asset.parentGroup = skyGroup;
+                sky.addAsset();
+                sky2.addAsset();
 
-                for (let i = 0; i < 5; i++) {
-                    let num = i + 1;
-                    let tmpBird = PIXI.Texture.fromImage('assets/bird/bird-0'+ num +'.png');
-                    bird.push(tmpBird);
-                    // bird[i].anchor.set(0.5);
-                    // bird[i].width = 34 * objScale;
-                    // bird[i].height = 24 * objScale;
-                    // bird[i].x = (app.renderer.width / 2) + 10;
-                    // bird[i].y = (app.renderer.height / 2) + 10;
-                    // app.stage.addChild(bird[i]);
-                }
+                createPipe();
 
-                birdy = new PIXI.extras.AnimatedSprite(bird);
-                birdy.anchor.set(0.5);
-                birdy.x = (app.renderer.width / 2) + 10;
-                birdy.y = (app.renderer.height / 2) + 10;
-                birdy.scale.set(objScale);
-                birdy.animationSpeed = 0.1;
-                birdy.loop = false;
-                app.stage.addChild(birdy);
+                let assetpath = 'assets/world/land.png';
+                ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground2 = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground.asset.parentGroup = groundGroup;
+                ground2.asset.parentGroup = groundGroup;
+                ground.addAsset();
+                ground2.addAsset();
 
-                app.stage.on('pointerdown', onTouchAnimation);
-
-                function onTouchAnimation() {
-                    birdy.play();
-                    birdy.onComplete = () => {
-                        birdy.gotoAndStop(0);
-                    };
-                }
+                createBird();
 
                 app.start();
             }
 
-            birdBox = Bodies.rectangle(((app.renderer.width / 2) + 10), ((app.renderer.height / 2) + 10), 80, 80);
-            groundBox = Bodies.rectangle(0, 473, 336 * 1.2, 112 * 1.2, { isStatic: true });
+            function restartGame() {
+                collision = false;
+                bird.removeBird();
+                pipedown.removePipe();
+                pipeup.removePipe();
 
-            app.ticker.add(function() {
-                postition += 1;
+                createBird();
+                createPipe();
+            }
 
-                birdy.position.x = birdBox.position.x;
-                birdy.position.y = birdBox.position.y;
-                birdy.rotation = birdBox.angle;
+            function endGame() {
+                collision = true;
+            }
 
-                sky.x = -(postition * 0.6);
-                sky.x %= sky.width * 2;
-                if (sky.x < 0) {
-                    sky.x += sky.width * 2;
-                }
-                sky.x -= sky.width;
+            let pos = 0;
+            function run() {
+                Engine.run(engine);
+
+                // Listen for animate update
+                app.ticker.add(function(delta) {
+                    if (collision) return;
+                    pos += 1;
+
+                    bird.bird.position = bird.body.position;
+                    if (bird.body.velocity.y < -1) {
+                        bird.bird.rotation = -0.5;
+                    } else {
+                        bird.bird.rotation = 0.5;
+                    }
+
+                    sky.asset.x = -(pos * 0.6);
+                    sky.asset.x %= sky.asset.width * 2;
+                    if (sky.asset.x < 0) {
+                        sky.asset.x += sky.asset.width * 2;
+                    }
+                    sky.asset.x -= sky.asset.width;
                 
-                sky2.x = -(postition * 0.6) + sky2.width;
-                sky2.x %= sky2.width * 2;
-                if(sky2.x < 0) {
-                    sky2.x += sky2.width * 2;
-                }
-                sky2.x -= sky2.width;
+                    sky2.asset.x = -(pos * 0.6) + sky2.asset.width;
+                    sky2.asset.x %= sky2.asset.width * 2;
+                    if(sky2.asset.x < 0) {
+                        sky2.asset.x += sky2.asset.width * 2;
+                    }
+                    sky2.asset.x -= sky2.asset.width;
 
-                ground.x = -(postition * 0.6);
-                ground.x %= ground.width * 2;
-                if (ground.x < 0) {
-                    ground.x += ground.width * 2;
-                }
-                ground.x -= ground.width;
-                
-                ground2.x = -(postition * 0.6) + ground2.width;
-                ground2.x %= ground2.width * 2;
-                if(ground2.x < 0) {
-                    ground2.x += ground2.width * 2;
-                }
-                ground2.x -= ground2.width;
-            });
+                    ground.asset.x = -(pos * 0.6);
+                    ground.asset.x %= ground.asset.width * 2;
+                    if (ground.asset.x < 0) {
+                        ground.asset.x += ground.asset.width * 2;
+                    }
+                    ground.asset.x -= ground.asset.width;
 
-            World.add(engine.world, [birdBox, groundBox]);
-            Engine.run(engine);
+                    
+                    ground2.asset.x = -(pos * 0.6) + ground2.asset.width;
+                    ground2.asset.x %= ground2.asset.width * 2;
+                    if (ground2.asset.x < 0) {
+                        ground2.asset.x += ground2.asset.width * 2;
+                    }
+                    ground2.asset.x -= ground2.asset.width;
+
+                    if (pipeup.body.position.x < -30) {
+                        pipeup = new Pipe(true);
+                        pipeup.addPipe();
+                    }
+                    let t = { x: -2, y: 0 };
+                    Body.translate(pipeup.body, t);
+                    pipeup.pipe.position = pipeup.body.position;
+
+                    if (pipedown.body.position.x < -30) {
+                        pipedown = new Pipe(false, pipeup.getPipeY());
+                        pipedown.addPipe();
+                    }
+                    Body.translate(pipedown.body, t);
+                    pipedown.pipe.position = pipedown.body.position;
+                });
+
+                Events.on(engine, 'collisionStart', endGame);
+            }
+
+            function addEventListeners() {
+                window.addEventListener('keydown', handleKeydown, false);
+            }
+
+            function handleKeydown(event) {
+                if (!collision) {
+                    if (event.keyCode === 32) {
+                        bird.bumpBird();
+                    }
+                } else {
+                    if (event.keyCode === 32) {
+                        restartGame();
+                    }
+                }
+            }
+
+            window.onload = init();
+
+            function init() {
+                setup();
+                addEventListeners();
+                run();
+            }
+
         </script>
     </body>
 </html>
