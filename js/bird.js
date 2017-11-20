@@ -24,6 +24,10 @@ class Bird {
         World.add(engine.world, this.body);
     }
 
+    removeBird() {
+        World.remove(engine.world, this.body);
+    }
+
     bumpBird() {
         let b = this.body;
         let p = this.body.position;
