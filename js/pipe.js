@@ -12,7 +12,7 @@ class Pipe {
             //yPos = 457;
         } else {
             this.pipe = PIXI.Sprite.fromImage('assets/world/PipeDown.png')
-            yPos = y - 350;
+            yPos = y - 400;
         }
 
         // center the sprite's anchor point
