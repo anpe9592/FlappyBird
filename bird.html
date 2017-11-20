@@ -7,6 +7,7 @@
         <script src="js/world.js" type="text/javascript"></script>
 
         <script src="js/pixi.js" type="text/javascript"></script>
+        <script src="js/pixi-layers.js" type="text/javascript"></script>
         <script src="js/matter.js" type="text/javascript"></script>
         <script>
             const gWidth = 288,
@@ -23,6 +24,18 @@
 
             const app = new PIXI.Application(gWidth, gHeight, {backgroundColor : 0x1099bb});
             document.body.appendChild(app.view);
+
+            let skyGroup = new PIXI.display.Group(0, true);
+            let pipeGroup = new PIXI.display.Group(1, true);
+            let groundGroup = new PIXI.display.Group(2, true);
+            let birdGroup= new PIXI.display.Group(3, true);
+
+            app.stage = new PIXI.display.Stage();
+            app.stage.group.enableSort = true;
+            app.stage.addChild(new PIXI.display.Layer(skyGroup));
+            app.stage.addChild(new PIXI.display.Layer(pipeGroup));
+            app.stage.addChild(new PIXI.display.Layer(groundGroup));
+            app.stage.addChild(new PIXI.display.Layer(birdGroup));
 
             let bird,
                 ground,
@@ -95,22 +108,31 @@
                 let assetpath2 = 'assets/world/sky.png';
                 sky = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
                 sky2 = new WorldA(assetpath2, skyW, skyH, app.renderer.height - groundH - skyH, gHeight, false);
+                sky.asset.parentGroup = skyGroup;
+                sky2.asset.parentGroup = skyGroup;
                 sky.addAsset();
                 sky2.addAsset();
 
+                //bunny.parentGroup = greenGroup;
+
                 pipeup = new Pipe(true);
+                pipeup.pipe.parentGroup = pipeGroup;
                 pipeup.addPipe();
 
                 pipedown = new Pipe(false, pipeup.getPipeY());
+                pipedown.pipe.parentGroup = pipeGroup;
                 pipedown.addPipe();
 
                 let assetpath = 'assets/world/land.png';
                 ground = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
                 ground2 = new WorldA(assetpath, groundW, groundH, app.renderer.height - groundH, gHeight, true);
+                ground.asset.parentGroup = groundGroup;
+                ground2.asset.parentGroup = groundGroup;
                 ground.addAsset();
                 ground2.addAsset();
 
                 bird = new Bird();
+                bird.bird.parentGroup = birdGroup;
                 bird.addBird();
 
                 app.start();
