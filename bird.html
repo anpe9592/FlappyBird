@@ -128,6 +128,11 @@
                     pos += 1;
 
                     bird.bird.position = bird.body.position;
+                    if (bird.body.velocity.y < -1) {
+                        bird.bird.rotation = -0.5;
+                    } else {
+                        bird.bird.rotation = 0.5;
+                    }
 
                     sky.asset.x = -(pos * 0.6);
                     sky.asset.x %= sky.asset.width * 2;
