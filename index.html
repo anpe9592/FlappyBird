@@ -183,6 +183,7 @@
 
             function addEventListeners () {
               window.addEventListener('keydown', handleKeydown, false)
+              window.addEventListener('touchstart', handleTouchstart, false);
             }
 
             function handleKeydown (event) {
@@ -194,6 +195,14 @@
                 if (event.keyCode === 32) {
                   restartGame()
                 }
+              }
+            }
+
+            function handleTouchstart(event) {
+              if (!collision) {
+                bird.bumpBird()
+              } else {
+                restartGame()
               }
             }
 
